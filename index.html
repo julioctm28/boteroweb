@@ -76,6 +76,25 @@
         }
         .btn-descarga:hover { transform: scale(1.05); background-color: #ffca28; }
 
+        /* INDICADOR DE SCROLL */
+        .indicador-scroll {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+            animation: flotar 2s infinite ease-in-out;
+        }
+        .indicador-scroll .flecha { font-size: 1.5rem; margin-top: 5px; }
+        @keyframes flotar {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
         /* CAPTURAS */
         .screenshots { display: flex; overflow-x: auto; gap: 15px; padding: 10px 0; margin-bottom: 30px; scrollbar-width: thin; }
         .screenshots img { height: 300px; border-radius: 15px; box-shadow: 0 5px 10px rgba(0,0,0,0.1); border: 2px solid #ddd; }
@@ -132,6 +151,7 @@
             .resenas-container { display: flex; gap: 40px; }
             .resenas-form-container { flex: 1; }
             .lista-resenas { flex: 1; }
+            .indicador-scroll { display: none; /* Ocultar en PC porque hay espacio */ }
         }
     </style>
 </head>
@@ -160,6 +180,12 @@
                 <span id="estrellas-promedio">★★★★★</span> <span id="texto-promedio">(0)</span>
             </div>
             <a href="https://boterocmg.de5.net/apk/botero-2.0.apk" class="btn-descarga">⬇️ Descargar la App</a>
+            
+            <!-- INDICADOR DE SCROLL -->
+            <div class="indicador-scroll">
+                <span>Desliza para ver más</span>
+                <span class="flecha">👇</span>
+            </div>
         </div>
     </section>
 

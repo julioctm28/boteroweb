@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botero Camagüey - Muévete rápido, llega seguro</title>
+    <style>
+        :root {
+            --azul-principal: #0d47a1;
+            --azul-claro: #1976d2;
+            --amarillo: #ffc107;
+            --blanco: #ffffff;
+            --gris-fondo: #f4f7f6;
+            --texto-oscuro: #333333;
+            --verde: #28a745;
+            --gris-texto: #666;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; scroll-behavior: smooth; }
+        body { background-color: var(--gris-fondo); color: var(--texto-oscuro); line-height: 1.6; padding-top: 60px; }
+
+        /* NAVEGACIÓN */
+        nav {
+            background-color: var(--azul-principal);
+            padding: 0 20px;
+            position: fixed; top: 0; width: 100%; height: 60px;
+            z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .nav-logo { display: flex; align-items: center; gap: 10px; color: var(--blanco); font-weight: bold; font-size: 1.1rem; }
+        .nav-logo img { height: 35px; width: 35px; object-fit: cover; border-radius: 50%; background: white; padding: 2px; }
+        .menu-icon { display: block; color: white; font-size: 30px; cursor: pointer; user-select: none; }
+        .nav-links {
+            display: none; position: absolute; top: 60px; left: 0; width: 100%;
+            background-color: var(--azul-principal); flex-direction: column;
+            padding: 20px; text-align: center; box-shadow: 0 10px 15px rgba(0,0,0,0.3);
+        }
+        .nav-links.active { display: flex; }
+        .nav-links li { list-style: none; margin-bottom: 15px; }
+        .nav-links a { color: var(--blanco); text-decoration: none; font-weight: 500; font-size: 1.1rem; display: block; padding: 10px; }
+        .nav-links a:hover { color: var(--amarillo); }
+
+        section { padding: 40px 20px; max-width: 900px; margin: 0 auto; }
+
+        /* PORTADA TIPO PLAY STORE */
+        .hero { 
+            background: linear-gradient(rgba(13, 71, 161, 0.6), rgba(13, 71, 161, 0.6)), url('mapa.jpg'); 
+            background-size: cover; background-position: center; color: var(--blanco);
+            border-radius: 0 0 30px 30px; padding: 60px 20px; margin-bottom: 20px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.9);
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+        }
+        
+        /* LOGO PERFECTAMENTE REDONDO */
+        .hero img { 
+            width: 130px; 
+            height: 130px; 
+            object-fit: cover; 
+            border-radius: 50%; 
+            margin-bottom: 20px; 
+            border: 4px solid var(--blanco); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4); 
+            background-color: var(--blanco); 
+        }
+        
+        .hero h1 { font-size: 2rem; margin-bottom: 5px; }
+        .hero p { font-size: 1.1rem; color: #e3f2fd; margin-bottom: 15px; }
+        .hero .rating { display: flex; align-items: center; gap: 5px; font-size: 1.1rem; margin-bottom: 20px; }
+        .hero .rating span { color: var(--amarillo); }
+        
+        .btn-descarga { 
+            background-color: var(--amarillo); color: var(--texto-oscuro); padding: 15px 40px;
+            font-size: 1.2rem; font-weight: bold; text-decoration: none; border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4); transition: transform 0.2s;
+            width: 100%; max-width: 300px; text-align: center;
+        }
+        .btn-descarga:hover { transform: scale(1.05); background-color: #ffca28; }
+
+        /* CAPTURAS */
+        .screenshots { display: flex; overflow-x: auto; gap: 15px; padding: 10px 0; margin-bottom: 30px; scrollbar-width: thin; }
+        .screenshots img { height: 300px; border-radius: 15px; box-shadow: 0 5px 10px rgba(0,0,0,0.1); border: 2px solid #ddd; }
+
+        /* NOVEDADES Y DESCRIPCIÓN */
+        .section-title { text-align: center; color: var(--azul-principal); font-size: 1.8rem; margin-bottom: 20px; border-bottom: 4px solid var(--amarillo); display: inline-block; padding-bottom: 5px; }
+        .aviso-prueba { background-color: #fff3cd; color: #856404; padding: 15px; border-radius: 10px; border-left: 5px solid var(--amarillo); margin-bottom: 20px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        .descripcion { background: var(--blanco); padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 40px; }
+
+        /* RESEÑAS */
+        .resenas-container { background: var(--blanco); padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .resenas-resumen { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        .resenas-numero { font-size: 3rem; font-weight: bold; color: var(--azul-principal); line-height: 1; }
+        .resenas-estrellas { color: var(--amarillo); font-size: 1.5rem; letter-spacing: 2px; }
+        
+        .form-resena { margin-bottom: 30px; }
+        .form-resena input, .form-resena textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px; font-family: inherit; }
+        .form-resena textarea { resize: vertical; height: 80px; }
+        
+        .input-estrellas { display: flex; gap: 5px; font-size: 2rem; color: #ddd; cursor: pointer; margin-bottom: 15px; justify-content: center; }
+        .input-estrellas .star.active { color: var(--amarillo); }
+        
+        .btn-enviar { background-color: var(--azul-claro); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem; transition: background 0.3s; }
+        .btn-enviar:hover { background-color: var(--azul-principal); }
+
+        .lista-resenas { display: flex; flex-direction: column; gap: 15px; }
+        .item-resena { border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .item-resena-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; }
+        .item-resena-header .estrellas { color: var(--amarillo); }
+        .item-resena p { font-size: 0.95rem; color: var(--gris-texto); }
+
+        /* CONTACTO */
+        .contacto { text-align: center; background: var(--blanco); padding: 30px 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .btn-whatsapp { display: inline-block; background-color: #25d366; color: white; padding: 15px 30px; font-size: 1.1rem; font-weight: bold; text-decoration: none; border-radius: 50px; margin-top: 20px; transition: transform 0.2s; width: 100%; max-width: 300px; }
+        .btn-whatsapp:hover { transform: scale(1.05); }
+
+        footer { background-color: var(--azul-principal); color: var(--blanco); text-align: center; padding: 20px; margin-top: 40px; font-size: 0.9rem; }
+
+        /* PC */
+        @media (min-width: 768px) {
+            body { padding-top: 80px; }
+            nav { height: 80px; }
+            .nav-logo { font-size: 1.3rem; }
+            .nav-logo img { height: 45px; width: 45px; }
+            .menu-icon { display: none; }
+            .nav-links { display: flex; position: static; flex-direction: row; width: auto; background: none; padding: 0; box-shadow: none; }
+            .nav-links li { margin: 0 15px; }
+            .nav-links a { padding: 0; }
+            .hero { flex-direction: row; justify-content: center; text-align: left; gap: 40px; padding: 80px 20px; }
+            .hero-content { display: flex; flex-direction: column; align-items: flex-start; }
+            .hero img { width: 160px; height: 160px; margin-bottom: 0; }
+            .btn-descarga { width: auto; }
+            .screenshots img { height: 450px; }
+            .resenas-container { display: flex; gap: 40px; }
+            .resenas-form-container { flex: 1; }
+            .lista-resenas { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">
+            <img src="logo.png" alt="Logo">
+            <span>Botero Camagüey</span>
+        </div>
+        <div class="menu-icon" onclick="document.querySelector('.nav-links').classList.toggle('active')">☰</div>
+        <ul class="nav-links">
+            <li><a href="#inicio" onclick="document.querySelector('.nav-links').classList.remove('active')">Inicio</a></li>
+            <li><a href="#novedades" onclick="document.querySelector('.nav-links').classList.remove('active')">Novedades</a></li>
+            <li><a href="#resenas" onclick="document.querySelector('.nav-links').classList.remove('active')">Reseñas</a></li>
+            <li><a href="#contacto" onclick="document.querySelector('.nav-links').classList.remove('active')">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <section id="inicio" class="hero">
+        <img src="logo.png" alt="Logo Botero">
+        <div class="hero-content">
+            <h1>Botero Camagüey</h1>
+            <p>Muévete rápido, llega seguro</p>
+            <div class="rating" id="rating-promedio">
+                <span id="estrellas-promedio">★★★★★</span> <span id="texto-promedio">(0)</span>
+            </div>
+            <a href="https://boterocmg.de5.net/apk/botero-2.0.apk" class="btn-descarga">⬇️ Descargar la App</a>
+        </div>
+    </section>
+
+    <!-- CAPTURAS DE PANTALLA -->
+    <section style="max-width: 100%; padding: 20px;">
+        <div class="screenshots">
+            <img src="captura1.jpg" alt="Captura 1">
+            <img src="captura2.jpg" alt="Captura 2">
+            <img src="captura3.jpg" alt="Captura 3">
+            <img src="captura4.jpg" alt="Captura 4">
+            <img src="captura5.jpg" alt="Captura 5">
+            <img src="captura6.jpg" alt="Captura 6">
+        </div>
+    </section>
+
+    <section id="novedades">
+        <div style="text-align: center;"><h2 class="section-title">Sobre la App</h2></div>
+        <div class="aviso-prueba">
+            <span>⚠️</span>
+            <span>Esta es una versión de prueba (Beta). Puede contener errores. Agradecemos su paciencia y sus comentarios para mejorar.</span>
+        </div>
+        <div class="descripcion">
+            <h3>🚀 Novedades y Descripción</h3>
+            <p>Botero Camagüey es la nueva forma de pedir taxi en la ciudad. Conectamos pasajeros y conductores de manera rápida, segura y eficiente. Nuestro sistema de mapas te muestra la ruta exacta y el tiempo estimado de llegada.</p>
+            <br>
+            <p><strong>Características principales:</strong></p>
+            <ul>
+                <li>📍 Geolocalización en tiempo real.</li>
+                <li>🕒 Cálculo de rutas y tiempos exactos.</li>
+                <li>💬 Comunicación directa entre pasajero y conductor.</li>
+                <li>🔔 Notificaciones instantáneas.</li>
+            </ul>
+            <br>
+            <p>¡Descarga la app y únete a la comunidad de Botero Camagüey!</p>
+        </div>
+    </section>
+
+    <section id="resenas">
+        <div style="text-align: center;"><h2 class="section-title">Reseñas de Usuarios</h2></div>
+        <div class="resenas-container">
+            
+            <!-- Formulario de Reseña -->
+            <div class="resenas-form-container">
+                <div class="resenas-resumen">
+                    <div class="resenas-numero" id="promedio-numero">0.0</div>
+                    <div>
+                        <div class="resenas-estrellas" id="promedio-estrellas">☆☆☆☆☆</div>
+                        <div style="font-size: 0.8rem; color: #666;" id="total-resenas">0 reseñas</div>
+                    </div>
+                </div>
+
+                <div class="form-resena">
+                    <h3>Deja tu reseña</h3>
+                    <div class="input-estrellas" id="estrellas-input">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                    <input type="text" id="nombre-resena" placeholder="Tu nombre (opcional)">
+                    <textarea id="comentario-resena" placeholder="Escribe tu opinión (opcional)"></textarea>
+                    <button class="btn-enviar" onclick="enviarResena()">Enviar Reseña</button>
+                </div>
+            </div>
+
+            <!-- Lista de Reseñas -->
+            <div class="lista-resenas" id="lista-resenas">
+                <p style="text-align: center; color: #666;">Cargando reseñas...</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="contacto">
+        <h2 class="section-title" style="display: block; text-align: center;">Contacto y Soporte</h2>
+        <div class="contacto">
+            <h3>¿Tienes problemas o sugerencias?</h3>
+            <p>Escríbenos directamente a nuestro WhatsApp de soporte técnico.</p>
+            <a href="https://wa.me/5359262089" target="_blank" class="btn-whatsapp">📱 Escribir por WhatsApp</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Botero Camagüey. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        const API_URL = "https://boterocmg.de5.net";
+        let estrellasSeleccionadas = 0;
+
+        // 1. Lógica de las estrellas para votar
+        document.querySelectorAll('.input-estrellas .star').forEach(star => {
+            star.addEventListener('click', function() {
+                estrellasSeleccionadas = this.getAttribute('data-value');
+                document.querySelectorAll('.input-estrellas .star').forEach(s => s.classList.remove('active'));
+                for(let i = 1; i <= estrellasSeleccionadas; i++) {
+                    document.querySelector(`.input-estrellas .star[data-value="${i}"]`).classList.add('active');
+                }
+            });
+        });
+
+        // 2. Enviar la reseña al servidor
+        async function enviarResena() {
+            const nombre = document.getElementById('nombre-resena').value;
+            const comentario = document.getElementById('comentario-resena').value;
+
+            if (estrellasSeleccionadas == 0) {
+                alert("Por favor, selecciona una puntuación con las estrellas.");
+                return;
+            }
+
+            const btn = event.target;
+            btn.innerText = "Enviando...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_URL}/api/resenas`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nombre: nombre,
+                        estrellas: parseInt(estrellasSeleccionadas),
+                        comentario: comentario
+                    })
+                });
+                
+                if (response.ok) {
+                    alert("¡Gracias! Tu reseña ha sido guardada.");
+                    document.getElementById('nombre-resena').value = '';
+                    document.getElementById('comentario-resena').value = '';
+                    estrellasSeleccionadas = 0;
+                    document.querySelectorAll('.input-estrellas .star').forEach(s => s.classList.remove('active'));
+                    cargarResenas(); // Recargar la lista
+                } else {
+                    alert("Error al enviar. Intenta de nuevo.");
+                }
+            } catch (e) {
+                alert("Error de conexión con el servidor.");
+            } finally {
+                btn.innerText = "Enviar Reseña";
+                btn.disabled = false;
+            }
+        }
+
+        // 3. Cargar el promedio y la lista de reseñas al abrir la página
+        async function cargarResenas() {
+            try {
+                // Promedio
+                const resProm = await fetch(`${API_URL}/api/resenas/promedio`);
+                const dataProm = await resProm.json();
+                
+                if (dataProm.ok) {
+                    const promedio = dataProm.promedio;
+                    const total = dataProm.total;
+                    
+                    document.getElementById('promedio-numero').innerText = promedio.toFixed(1);
+                    document.getElementById('total-resenas').innerText = `${total} reseñas`;
+                    document.getElementById('texto-promedio').innerText = `(${total})`;
+                    
+                    let estrellasHtml = "";
+                    for (let i = 1; i <= 5; i++) {
+                        if (promedio >= i) estrellasHtml += "★";
+                        else if (promedio >= i - 0.5) estrellasHtml += "⯪";
+                        else estrellasHtml += "☆";
+                    }
+                    document.getElementById('promedio-estrellas').innerText = estrellasHtml;
+                    document.getElementById('estrellas-promedio').innerText = estrellasHtml;
+                }
+
+                // Lista
+                const resLista = await fetch(`${API_URL}/api/resenas/lista`);
+                const dataLista = await resLista.json();
+                
+                if (dataLista.ok && dataLista.resenas.length > 0) {
+                    const contenedor = document.getElementById('lista-resenas');
+                    contenedor.innerHTML = "";
+                    dataLista.resenas.forEach(r => {
+                        const stars = "★".repeat(r.estrellas) + "☆".repeat(5 - r.estrellas);
+                        contenedor.innerHTML += `
+                            <div class="item-resena">
+                                <div class="item-resena-header">
+                                    <span>${r.nombre}</span>
+                                    <span class="estrellas">${stars}</span>
+                                </div>
+                                ${r.comentario ? `<p>${r.comentario}</p>` : ''}
+                            </div>
+                        `;
+                    });
+                } else {
+                    document.getElementById('lista-resenas').innerHTML = '<p style="text-align: center; color: #666;">No hay reseñas aún. ¡Sé el primero!</p>';
+                }
+
+            } catch (e) {
+                console.error("Error cargando reseñas:", e);
+            }
+        }
+
+        // Ejecutar al cargar la página
+        cargarResenas();
+    </script>
+</body>
+</html>

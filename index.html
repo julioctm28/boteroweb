@@ -76,6 +76,33 @@
         }
         .btn-descarga:hover { transform: scale(1.05); background-color: #ffca28; }
 
+        /* CONTADOR DE DESCARGAS */
+        .contador-descargas {
+            margin-top: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 8px 18px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: var(--blanco);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+        .contador-descargas .contador-numero {
+            color: var(--amarillo);
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-left: 2px;
+        }
+        .contador-descargas.oculto { display: none; }
+
         /* INDICADOR DE SCROLL */
         .indicador-scroll {
             margin-top: 30px;
@@ -180,7 +207,13 @@
                 <span id="estrellas-promedio">★★★★★</span> <span id="texto-promedio">(0)</span>
             </div>
             <a href="https://github.com/julioctm28/boteroweb/releases/download/v1.0/botero-v1.0.apk" class="btn-descarga">⬇️ Descargar la App</a>
-            
+
+            <!-- ⭐ CONTADOR DE DESCARGAS -->
+            <div class="contador-descargas oculto" id="contador-descargas">
+                <span>📥</span>
+                <span>Descargas: <span class="contador-numero" id="contador-numero">—</span></span>
+            </div>
+
             <!-- INDICADOR DE SCROLL -->
             <div class="indicador-scroll">
                 <span>Desliza para ver más</span>
@@ -384,8 +417,31 @@
             }
         }
 
+        // ⭐ 4. Cargar el contador de descargas desde GitHub
+        async function cargarContadorDescargas() {
+            const contenedor = document.getElementById('contador-descargas');
+            const numero = document.getElementById('contador-numero');
+            if (!contenedor || !numero) return;
+
+            try {
+                const resp = await fetch(`${API_URL}/api/github-downloads`);
+                const data = await resp.json();
+
+                if (data && data.ok && typeof data.total_downloads === 'number') {
+                    numero.textContent = data.total_downloads.toLocaleString('es');
+                    contenedor.classList.remove('oculto');
+                } else {
+                    console.warn('[CONTADOR] Respuesta inválida:', data);
+                }
+            } catch (e) {
+                console.error('[CONTADOR] Error:', e);
+                // Se queda oculto, no rompe la página
+            }
+        }
+
         // Ejecutar al cargar la página
         cargarResenas();
+        cargarContadorDescargas();   // ⭐ NUEVO
     </script>
 </body>
 </html>
